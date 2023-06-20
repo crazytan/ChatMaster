@@ -36,6 +36,14 @@ class MyApp extends StatelessWidget {
   }
 }
 
+class Session {
+  final String name;
+  List<String> messages;
+
+  Session({required this.name, List<String>? messages})
+      : messages = messages ?? [];
+}
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
@@ -55,13 +63,17 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<String> _messages = [];
+  final List<Session> _sessions = [
+    Session(name: 'Session 1'),
+    Session(name: 'Session 2'),
+  ];
+  int _activeSessionIndex = 0;
   final TextEditingController _textController = TextEditingController();
 
   void _handleSubmitted(String text) {
     _textController.clear();
     setState(() {
-      _messages.add(text);
+      _sessions[_activeSessionIndex].messages.add(text);
     });
   }
 
@@ -89,26 +101,50 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final activeSession = _sessions[_activeSessionIndex];
+
     return Scaffold(
-/*      appBar: AppBar(
-        title: const Text('Single User Chat App'),
-      ),*/
-      body: Column(
+      appBar: AppBar(
+        title: Text(activeSession.name),
+      ),
+      body: Row(
         children: [
-          Flexible(
+          SizedBox(
+            width: 200.0,
             child: ListView.builder(
-              padding: const EdgeInsets.all(8.0),
-              reverse: true,
-              itemCount: _messages.length,
-              itemBuilder: (_, int index) => ListTile(
-                title: Text(_messages[_messages.length - index - 1]),
+              itemCount: _sessions.length,
+              itemBuilder: (context, index) => ListTile(
+                title: Text(_sessions[index].name),
+                onTap: () {
+                  setState(() {
+                    _activeSessionIndex = index;
+                  });
+                },
               ),
             ),
           ),
-          const Divider(height: 1.0),
-          Container(
-            decoration: BoxDecoration(color: Theme.of(context).cardColor),
-            child: _buildTextComposer(),
+          const VerticalDivider(width: 1.0),
+          Expanded(
+            child: Column(
+              children: [
+                Flexible(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(8.0),
+                    reverse: true,
+                    itemCount: activeSession.messages.length,
+                    itemBuilder: (_, int index) => ListTile(
+                      title: Text(activeSession
+                          .messages[activeSession.messages.length - index - 1]),
+                    ),
+                  ),
+                ),
+                const Divider(height: 1.0),
+                Container(
+                  decoration: BoxDecoration(color: Theme.of(context).cardColor),
+                  child: _buildTextComposer(),
+                ),
+              ],
+            ),
           ),
         ],
       ),
