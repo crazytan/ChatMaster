@@ -68,19 +68,27 @@ class _MyHomePageState extends State<MyHomePage> {
     Session(name: 'Session 2'),
   ];
   int _activeSessionIndex = 0;
+
   final TextEditingController _textController = TextEditingController();
+
+  final FocusNode _textInputFocusNode = FocusNode();
 
   void _handleSubmitted(String text) {
     _textController.clear();
-    setState(() {
-      _sessions[_activeSessionIndex].messages.add(text);
-    });
+    if (text.isNotEmpty) {
+      setState(() {
+        _sessions[_activeSessionIndex].messages.add(text);
+      });
+    }
+    FocusScope.of(context).requestFocus(_textInputFocusNode);
   }
 
   void _createNewSession() {
     setState(() {
       _sessions.add(Session(name: 'Session ${_sessions.length + 1}'));
+      _activeSessionIndex = _sessions.length - 1;
     });
+    FocusScope.of(context).requestFocus(_textInputFocusNode);
   }
 
   Widget _buildTextComposer() {
@@ -89,16 +97,20 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Row(
         children: [
           Expanded(
-            child: TextField(
-              controller: _textController,
-              decoration: const InputDecoration.collapsed(hintText: " Prompt"),
-              onSubmitted: _handleSubmitted,
-              autofocus: true,
-            ),
+              child: TextField(
+                controller: _textController,
+                decoration: const InputDecoration.collapsed(hintText: " Prompt"),
+                onSubmitted: _handleSubmitted,
+                autofocus: true,
+                focusNode: _textInputFocusNode,
+              ),
           ),
           IconButton(
             icon: const Icon(Icons.send),
-            onPressed: () => _handleSubmitted(_textController.text),
+            onPressed: () {
+              _handleSubmitted(_textController.text);
+              FocusScope.of(context).requestFocus(FocusNode());
+            },
           ),
         ],
       ),
@@ -127,6 +139,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       setState(() {
                         _activeSessionIndex = index;
                       });
+                      FocusScope.of(context).requestFocus(_textInputFocusNode);
                     },
                   ),
                 ),
