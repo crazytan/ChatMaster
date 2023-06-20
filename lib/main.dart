@@ -77,6 +77,12 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void _createNewSession() {
+    setState(() {
+      _sessions.add(Session(name: 'Session ${_sessions.length + 1}'));
+    });
+  }
+
   Widget _buildTextComposer() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -111,17 +117,25 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           SizedBox(
             width: 200.0,
-            child: ListView.builder(
-              itemCount: _sessions.length,
-              itemBuilder: (context, index) => ListTile(
-                title: Text(_sessions[index].name),
-                onTap: () {
-                  setState(() {
-                    _activeSessionIndex = index;
-                  });
-                },
+            child: Column(children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _sessions.length,
+                  itemBuilder: (context, index) => ListTile(
+                    title: Text(_sessions[index].name),
+                    onTap: () {
+                      setState(() {
+                        _activeSessionIndex = index;
+                      });
+                    },
+                  ),
+                ),
               ),
-            ),
+              FloatingActionButton(
+                onPressed: _createNewSession,
+                child: const Icon(Icons.add),
+              ),
+            ]),
           ),
           const VerticalDivider(width: 1.0),
           Expanded(
