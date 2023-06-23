@@ -26,6 +26,7 @@ class ChatModel extends ChangeNotifier {
 
   void createNewSession() {
     _sessions.add(Session(name: 'Session ${_sessions.length + 1}'));
+    _activeSessionIndex = _sessions.length - 1;
     notifyListeners();
   }
 
