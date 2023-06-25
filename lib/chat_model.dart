@@ -87,6 +87,7 @@ class ChatModel extends ChangeNotifier {
   void addMessageToActiveSession(String text) {
     if (text.isNotEmpty) {
       _sessions[_activeSessionIndex].messages.add(Message(text: text));
+      _saveData();
       notifyListeners();
     }
   }
