@@ -36,7 +36,7 @@ class MultiSessionChatScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<ChatModel>(
       builder: (context, chatModel, _) => Scaffold(
-        appBar: AppBar(title: Text(chatModel.activeSession.name)),
+        //appBar: AppBar(title: Text(chatModel.activeSession.name)),
         body: Row(
           children: [
             SizedBox(
@@ -46,21 +46,27 @@ class MultiSessionChatScreen extends StatelessWidget {
                   Expanded(
                     child: ListView.builder(
                       itemCount: chatModel.sessions.length,
-                      itemBuilder: (context, index) => ListTile(
-                        title: Text(chatModel.sessions[index].name),
-                        onTap: () {
-                          chatModel.setActiveSession(index);
-                          FocusScope.of(context).requestFocus(_textInputFocusNode);
-                        },
+                      itemBuilder: (context, index) => Card(
+                        child: ListTile(
+                          title: Text(
+                            chatModel.sessions[index].name,
+                          ),
+                          selected: chatModel.activeSessionIndex == index,
+                          onTap: () {
+                            chatModel.setActiveSession(index);
+                            FocusScope.of(context).requestFocus(_textInputFocusNode);
+                          },
+                        ),
                       ),
                     ),
                   ),
-                  FloatingActionButton(
+                  FloatingActionButton.extended(
                     onPressed: () {
                       chatModel.createNewSession();
                       FocusScope.of(context).requestFocus(_textInputFocusNode);
                     },
-                    child: const Icon(Icons.add),
+                    label: const Text('New Chat'),
+                    icon: const Icon(Icons.add),
                   ),
                 ],
               ),
@@ -73,9 +79,11 @@ class MultiSessionChatScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     reverse: true,
                     itemCount: chatModel.activeSession.messages.length,
-                    itemBuilder: (_, index) => ListTile(
-                      title: Text(
-                          chatModel.activeSession.messages[chatModel.activeSession.messages.length - index - 1].text),
+                    itemBuilder: (_, index) => Card(
+                      child: ListTile(
+                        title: Text(
+                            chatModel.activeSession.messages[chatModel.activeSession.messages.length - index - 1].text),
+                      ),
                     ),
                   ),
                 ),

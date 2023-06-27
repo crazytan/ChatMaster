@@ -47,6 +47,8 @@ class ChatModel extends ChangeNotifier {
 
   Session get activeSession => _sessions[_activeSessionIndex];
 
+  int get activeSessionIndex => _activeSessionIndex;
+
   void _loadData() {
     JsonFileIO.readJsonFile().then((data) {
       if (data.isNotEmpty) {
