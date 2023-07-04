@@ -23,6 +23,8 @@ class Session {
 
   Map<String, dynamic> toJson() => {'name': name, 'messages': messages.map((m) => m.toJson()).toList()};
 
+  Message latestMessageAt(int index) => messages[messages.length - index - 1];
+
   static bool hasMessages(Map<String, dynamic> json) {
     if (!json.containsKey('messages')) return false;
     dynamic msgs = json['messages'];

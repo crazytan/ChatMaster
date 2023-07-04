@@ -36,11 +36,10 @@ class MultiSessionChatScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<ChatModel>(
       builder: (context, chatModel, _) => Scaffold(
-        //appBar: AppBar(title: Text(chatModel.activeSession.name)),
         body: Row(
           children: [
             SizedBox(
-              width: 200.0,
+              width: 160.0,
               child: Column(
                 children: [
                   Expanded(
@@ -76,13 +75,19 @@ class MultiSessionChatScreen extends StatelessWidget {
               child: Column(children: [
                 Flexible(
                   child: ListView.builder(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(1.0),
                     reverse: true,
                     itemCount: chatModel.activeSession.messages.length,
-                    itemBuilder: (_, index) => Card(
-                      child: ListTile(
-                        title: Text(
-                            chatModel.activeSession.messages[chatModel.activeSession.messages.length - index - 1].text),
+                    itemBuilder: (_, index) => Container(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(6.0),
+                            child: Text(chatModel.activeSession.latestMessageAt(index).text),
+                          ),
+                        ),
                       ),
                     ),
                   ),
