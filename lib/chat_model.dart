@@ -2,16 +2,6 @@ import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/material.dart';
 import 'json_file_io.dart';
 
-/* class Message {
-  final String text;
-
-  Message({required this.text});
-
-  Message.fromJson(Map<String, dynamic> json) : text = json['text'];
-
-  Map<String, dynamic> toJson() => {'text': text};
-} */
-
 typedef Message = OpenAIChatCompletionChoiceMessageModel;
 
 class Session {
@@ -27,6 +17,12 @@ class Session {
   Map<String, dynamic> toJson() => {'name': name, 'messages': messages.map((m) => m.toMap()).toList()};
 
   Message latestMessageAt(int index) => messages[messages.length - index - 1];
+
+  bool isLatestMessageAtUserRole(int index) => messages[messages.length - index - 1].role == OpenAIChatMessageRole.user;
+
+  void addUserInput(String text) {
+    messages.add(Message(role: OpenAIChatMessageRole.user, content: text));
+  }
 
   static bool hasMessages(Map<String, dynamic> json) {
     if (!json.containsKey('messages')) return false;
@@ -91,11 +87,22 @@ class ChatModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addMessageToActiveSession(String text) {
+  Future<void> addMessageToActiveSession(String text) async {
     if (text.isEmpty) return;
 
-    _sessions[_activeSessionIndex].messages.add(Message(role: OpenAIChatMessageRole.user, content: text));
+    Session session = activeSession;
+    session.addUserInput(text);
     _saveData();
+
+    OpenAI.instance.chat.create(model: "gpt-3.5-turbo", messages: session.messages).then((completion) {
+      if (!completion.haveChoices) return;
+
+      session.messages.add(completion.choices.first.message);
+      _saveData();
+      notifyListeners();
+    }).catchError((error) {
+      debugPrint(error);
+    });
     notifyListeners();
   }
 }

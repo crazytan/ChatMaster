@@ -17,24 +17,23 @@ class _TextComposerState extends State<TextComposer> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: TextField(
-            controller: _textController,
-            decoration: const InputDecoration(hintText: "Send a message", border: OutlineInputBorder()),
-            onSubmitted: (text) {
-              _handleSubmitted(context, text);
-            },
-            focusNode: widget.focusNode,
-            maxLines: null,
+    return Expanded(
+      child: TextField(
+        controller: _textController,
+        decoration: InputDecoration(
+          hintText: "Send a message",
+          border: const OutlineInputBorder(),
+          suffixIcon: IconButton(
+            icon: const Icon(Icons.send),
+            onPressed: () => _handleSubmitted(context, _textController.text),
           ),
         ),
-        IconButton(
-          icon: const Icon(Icons.send),
-          onPressed: () => _handleSubmitted(context, _textController.text),
-        ),
-      ],
+        onSubmitted: (text) {
+          _handleSubmitted(context, text);
+        },
+        focusNode: widget.focusNode,
+        maxLines: null,
+      ),
     );
   }
 

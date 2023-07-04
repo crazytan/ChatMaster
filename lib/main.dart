@@ -1,10 +1,13 @@
+import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'chat_model.dart';
+import 'env.dart';
 import 'text_composer.dart';
 
 void main() {
+  OpenAI.apiKey = Env.apiKey;
   runApp(const MyApp());
 }
 
@@ -81,11 +84,14 @@ class MultiSessionChatScreen extends StatelessWidget {
                     itemBuilder: (_, index) => Container(
                       padding: const EdgeInsets.all(4.0),
                       child: Align(
-                        alignment: Alignment.centerRight,
+                        alignment: chatModel.activeSession.isLatestMessageAtUserRole(index)
+                            ? Alignment.centerRight
+                            : Alignment.centerLeft,
                         child: Card(
                           child: Padding(
                             padding: const EdgeInsets.all(6.0),
-                            child: Text(chatModel.activeSession.latestMessageAt(index).content),
+                            child: Text(chatModel.activeSession.latestMessageAt(index).content,
+                                style: Theme.of(context).textTheme.bodyLarge),
                           ),
                         ),
                       ),
