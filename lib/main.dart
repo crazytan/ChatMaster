@@ -85,7 +85,7 @@ class MultiSessionChatScreen extends StatelessWidget {
                         child: Card(
                           child: Padding(
                             padding: const EdgeInsets.all(6.0),
-                            child: Text(chatModel.activeSession.latestMessageAt(index).text),
+                            child: Text(chatModel.activeSession.latestMessageAt(index).content),
                           ),
                         ),
                       ),

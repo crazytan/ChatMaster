@@ -1,7 +1,8 @@
+import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/material.dart';
 import 'json_file_io.dart';
 
-class Message {
+/* class Message {
   final String text;
 
   Message({required this.text});
@@ -9,7 +10,9 @@ class Message {
   Message.fromJson(Map<String, dynamic> json) : text = json['text'];
 
   Map<String, dynamic> toJson() => {'text': text};
-}
+} */
+
+typedef Message = OpenAIChatCompletionChoiceMessageModel;
 
 class Session {
   final String name;
@@ -19,9 +22,9 @@ class Session {
 
   Session.fromJson(Map<String, dynamic> json)
       : name = json['name'],
-        messages = hasMessages(json) ? json['messages'].map<Message>((m) => Message.fromJson(m)).toList() : [];
+        messages = hasMessages(json) ? json['messages'].map<Message>((m) => Message.fromMap(m)).toList() : [];
 
-  Map<String, dynamic> toJson() => {'name': name, 'messages': messages.map((m) => m.toJson()).toList()};
+  Map<String, dynamic> toJson() => {'name': name, 'messages': messages.map((m) => m.toMap()).toList()};
 
   Message latestMessageAt(int index) => messages[messages.length - index - 1];
 
@@ -38,7 +41,7 @@ class Session {
 }
 
 class ChatModel extends ChangeNotifier {
-  List<Session> _sessions = [Session(name: 'Session 0')];
+  List<Session> _sessions = [Session(name: 'Session 1')];
   int _activeSessionIndex = 0;
 
   ChatModel() {
@@ -89,10 +92,10 @@ class ChatModel extends ChangeNotifier {
   }
 
   void addMessageToActiveSession(String text) {
-    if (text.isNotEmpty) {
-      _sessions[_activeSessionIndex].messages.add(Message(text: text));
-      _saveData();
-      notifyListeners();
-    }
+    if (text.isEmpty) return;
+
+    _sessions[_activeSessionIndex].messages.add(Message(role: OpenAIChatMessageRole.user, content: text));
+    _saveData();
+    notifyListeners();
   }
 }
