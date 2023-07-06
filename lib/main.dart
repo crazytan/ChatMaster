@@ -82,7 +82,7 @@ class MultiSessionChatScreen extends StatelessWidget {
                     reverse: true,
                     itemCount: chatModel.activeSession.messages.length,
                     itemBuilder: (_, index) => Container(
-                      padding: const EdgeInsets.all(4.0),
+                      padding: const EdgeInsets.all(2.0),
                       child: Align(
                         alignment: chatModel.activeSession.isLatestMessageAtUserRole(index)
                             ? Alignment.centerRight
@@ -90,8 +90,11 @@ class MultiSessionChatScreen extends StatelessWidget {
                         child: Card(
                           child: Padding(
                             padding: const EdgeInsets.all(6.0),
-                            child: Text(chatModel.activeSession.latestMessageAt(index).content,
-                                style: Theme.of(context).textTheme.bodyLarge),
+                            child: SelectableText(
+                              chatModel.activeSession.latestMessageAt(index).content,
+                              style: Theme.of(context).textTheme.bodyLarge,
+                              selectionControls: MaterialTextSelectionControls(),
+                            ),
                           ),
                         ),
                       ),
