@@ -24,6 +24,10 @@ class Session {
     messages.add(Message(role: OpenAIChatMessageRole.user, content: text));
   }
 
+  void removeLatestMessageAt(int index) {
+    messages.removeAt(messages.length - index - 1);
+  }
+
   static bool hasMessages(Map<String, dynamic> json) {
     if (!json.containsKey('messages')) return false;
     dynamic msgs = json['messages'];
@@ -103,6 +107,12 @@ class ChatModel extends ChangeNotifier {
     }).catchError((error) {
       debugPrint(error);
     });
+    notifyListeners();
+  }
+
+  void deleteMessageFromActiveSession(int index) {
+    activeSession.removeLatestMessageAt(index);
+    _saveData();
     notifyListeners();
   }
 }

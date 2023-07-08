@@ -83,20 +83,25 @@ class MultiSessionChatScreen extends StatelessWidget {
                     itemCount: chatModel.activeSession.messages.length,
                     itemBuilder: (_, index) => Container(
                       padding: const EdgeInsets.all(2.0),
-                      child: Align(
-                        alignment: chatModel.activeSession.isLatestMessageAtUserRole(index)
-                            ? Alignment.centerRight
-                            : Alignment.centerLeft,
-                        child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(6.0),
-                            child: SelectableText(
-                              chatModel.activeSession.latestMessageAt(index).content,
-                              style: Theme.of(context).textTheme.bodyLarge,
-                              selectionControls: MaterialTextSelectionControls(),
+                      child: Row(
+                        mainAxisAlignment: chatModel.activeSession.isLatestMessageAtUserRole(index)
+                            ? MainAxisAlignment.end
+                            : MainAxisAlignment.start,
+                        children: [
+                          IconButton(
+                              onPressed: () => chatModel.deleteMessageFromActiveSession(index),
+                              icon: const Icon(Icons.delete)),
+                          Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(6.0),
+                              child: SelectableText(
+                                chatModel.activeSession.latestMessageAt(index).content,
+                                style: Theme.of(context).textTheme.bodyLarge,
+                                selectionControls: MaterialTextSelectionControls(),
+                              ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
                     ),
                   ),
