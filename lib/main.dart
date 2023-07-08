@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'chat_model.dart';
+import 'chat_screen.dart';
 import 'env.dart';
-import 'text_composer.dart';
+import 'session_list.dart';
 
 void main() {
   OpenAI.apiKey = Env.apiKey;
@@ -41,82 +42,10 @@ class MultiSessionChatScreen extends StatelessWidget {
       builder: (context, chatModel, _) => Scaffold(
         body: Row(
           children: [
-            SizedBox(
-              width: 160.0,
-              child: Column(
-                children: [
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: chatModel.sessions.length,
-                      itemBuilder: (context, index) => Card(
-                        child: ListTile(
-                          title: Text(
-                            chatModel.sessions[index].name,
-                          ),
-                          selected: chatModel.activeSessionIndex == index,
-                          onTap: () {
-                            chatModel.setActiveSession(index);
-                            FocusScope.of(context).requestFocus(_textInputFocusNode);
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-                  FloatingActionButton.extended(
-                    onPressed: () {
-                      chatModel.createNewSession();
-                      FocusScope.of(context).requestFocus(_textInputFocusNode);
-                    },
-                    label: const Text('New Chat'),
-                    icon: const Icon(Icons.add),
-                  ),
-                ],
-              ),
-            ),
+            SessionList(textInputFocusNode: _textInputFocusNode),
             const VerticalDivider(width: 1.0),
             Expanded(
-              child: Column(children: [
-                Flexible(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(1.0),
-                    reverse: true,
-                    itemCount: chatModel.activeSession.messages.length,
-                    itemBuilder: (_, index) => Container(
-                      padding: const EdgeInsets.all(2.0),
-                      child: Row(
-                        mainAxisAlignment: chatModel.activeSession.isLatestMessageAtUserRole(index)
-                            ? MainAxisAlignment.end
-                            : MainAxisAlignment.start,
-                        children: [
-                          IconButton(
-                              onPressed: () => chatModel.deleteMessageFromActiveSession(index),
-                              icon: const Icon(Icons.delete)),
-                          Flexible(
-                            child: Card(
-                              child: Padding(
-                                padding: const EdgeInsets.all(6.0),
-                                child: SelectableText(
-                                  chatModel.activeSession.latestMessageAt(index).content,
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                  selectionControls: MaterialTextSelectionControls(),
-                                  maxLines: null,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                const Divider(height: 1.0),
-                Container(
-                  decoration: BoxDecoration(color: Theme.of(context).cardColor),
-                  child: TextComposer(
-                    focusNode: _textInputFocusNode,
-                  ),
-                ),
-              ]),
+              child: ChatScreen(textInputFocusNode: _textInputFocusNode),
             ),
           ],
         ),
