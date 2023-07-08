@@ -91,13 +91,16 @@ class MultiSessionChatScreen extends StatelessWidget {
                           IconButton(
                               onPressed: () => chatModel.deleteMessageFromActiveSession(index),
                               icon: const Icon(Icons.delete)),
-                          Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(6.0),
-                              child: SelectableText(
-                                chatModel.activeSession.latestMessageAt(index).content,
-                                style: Theme.of(context).textTheme.bodyLarge,
-                                selectionControls: MaterialTextSelectionControls(),
+                          Flexible(
+                            child: Card(
+                              child: Padding(
+                                padding: const EdgeInsets.all(6.0),
+                                child: SelectableText(
+                                  chatModel.activeSession.latestMessageAt(index).content,
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                  selectionControls: MaterialTextSelectionControls(),
+                                  maxLines: null,
+                                ),
                               ),
                             ),
                           ),
