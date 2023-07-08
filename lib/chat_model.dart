@@ -1,5 +1,6 @@
 import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/material.dart';
+
 import 'json_file_io.dart';
 
 typedef Message = OpenAIChatCompletionChoiceMessageModel;
@@ -14,6 +15,17 @@ class Session {
       : name = json['name'],
         messages = hasMessages(json) ? json['messages'].map<Message>((m) => Message.fromMap(m)).toList() : [];
 
+  static bool hasMessages(Map<String, dynamic> json) {
+    if (!json.containsKey('messages')) return false;
+    dynamic messages = json['messages'];
+
+    if (messages is! List) {
+      return false;
+    }
+
+    return messages.isNotEmpty;
+  }
+
   Map<String, dynamic> toJson() => {'name': name, 'messages': messages.map((m) => m.toMap()).toList()};
 
   Message latestMessageAt(int index) => messages[messages.length - index - 1];
@@ -26,17 +38,6 @@ class Session {
 
   void removeLatestMessageAt(int index) {
     messages.removeAt(messages.length - index - 1);
-  }
-
-  static bool hasMessages(Map<String, dynamic> json) {
-    if (!json.containsKey('messages')) return false;
-    dynamic msgs = json['messages'];
-
-    if (msgs is! List) {
-      return false;
-    }
-
-    return msgs.isNotEmpty;
   }
 }
 
@@ -81,6 +82,13 @@ class ChatModel extends ChangeNotifier {
   void createNewSession() {
     _sessions.add(Session(name: 'Session ${_sessions.length + 1}'));
     _activeSessionIndex = _sessions.length - 1;
+    _saveData();
+    notifyListeners();
+  }
+
+  void deleteSession(int index) {
+    _sessions.removeAt(index);
+    if (_activeSessionIndex >= _sessions.length) _activeSessionIndex = _sessions.length - 1;
     _saveData();
     notifyListeners();
   }

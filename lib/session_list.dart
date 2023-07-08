@@ -18,7 +18,7 @@ class SessionList extends StatelessWidget {
 
   Widget sizedBox(BuildContext context, ChatModel chatModel) {
     return SizedBox(
-      width: 160.0,
+      width: 200.0,
       child: Column(
         children: [
           Expanded(
@@ -26,15 +26,20 @@ class SessionList extends StatelessWidget {
               itemCount: chatModel.sessions.length,
               itemBuilder: (context, index) => Card(
                 child: ListTile(
-                  title: Text(
-                    chatModel.sessions[index].name,
-                  ),
-                  selected: chatModel.activeSessionIndex == index,
-                  onTap: () {
-                    chatModel.setActiveSession(index);
-                    FocusScope.of(context).requestFocus(_textInputFocusNode);
-                  },
-                ),
+                    title: Text(
+                      chatModel.sessions[index].name,
+                    ),
+                    selected: chatModel.activeSessionIndex == index,
+                    onTap: () {
+                      chatModel.setActiveSession(index);
+                      FocusScope.of(context).requestFocus(_textInputFocusNode);
+                    },
+                    contentPadding: const EdgeInsets.only(left: 10, right: 5, top: 0, bottom: 0),
+                    // visualDensity: VisualDensity(horizontal: -4),
+                    trailing: IconButton(
+                      onPressed: () => chatModel.deleteSession(index),
+                      icon: const Icon(Icons.delete),
+                    )),
               ),
             ),
           ),

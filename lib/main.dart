@@ -38,17 +38,15 @@ class MultiSessionChatScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ChatModel>(
-      builder: (context, chatModel, _) => Scaffold(
-        body: Row(
-          children: [
-            SessionList(textInputFocusNode: _textInputFocusNode),
-            const VerticalDivider(width: 1.0),
-            Expanded(
-              child: ChatScreen(textInputFocusNode: _textInputFocusNode),
-            ),
-          ],
-        ),
+    return Scaffold(
+      body: Row(
+        children: [
+          SessionList(textInputFocusNode: _textInputFocusNode),
+          const VerticalDivider(width: 1.0),
+          Expanded(
+            child: ChatScreen(textInputFocusNode: _textInputFocusNode),
+          ),
+        ],
       ),
     );
   }

@@ -21,31 +21,31 @@ class ChatScreen extends StatelessWidget {
             padding: const EdgeInsets.all(1.0),
             reverse: true,
             itemCount: chatModel.activeSession.messages.length,
-            itemBuilder: (_, index) => Container(
-              padding: const EdgeInsets.all(2.0),
-              child: Row(
-                mainAxisAlignment: chatModel.activeSession.isLatestMessageAtUserRole(index)
-                    ? MainAxisAlignment.end
-                    : MainAxisAlignment.start,
-                children: [
-                  IconButton(
-                      onPressed: () => chatModel.deleteMessageFromActiveSession(index), icon: const Icon(Icons.delete)),
-                  Flexible(
-                    child: Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(6.0),
-                        child: SelectableText(
-                          chatModel.activeSession.latestMessageAt(index).content,
-                          style: Theme.of(context).textTheme.bodyLarge,
-                          selectionControls: MaterialTextSelectionControls(),
-                          maxLines: null,
-                        ),
-                      ),
+            itemBuilder: (_, index) {
+              bool isUser = chatModel.activeSession.isLatestMessageAtUserRole(index);
+              Widget deleteButton = IconButton(
+                  onPressed: () => chatModel.deleteMessageFromActiveSession(index), icon: const Icon(Icons.delete));
+              Widget message = Flexible(
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: SelectableText(
+                      chatModel.activeSession.latestMessageAt(index).content,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                      selectionControls: MaterialTextSelectionControls(),
+                      maxLines: null,
                     ),
                   ),
-                ],
-              ),
-            ),
+                ),
+              );
+              return Container(
+                padding: const EdgeInsets.all(2.0),
+                child: Row(
+                  mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+                  children: isUser ? [deleteButton, message] : [message, deleteButton],
+                ),
+              );
+            },
           ),
         ),
       ),
