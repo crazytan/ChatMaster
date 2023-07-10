@@ -82,6 +82,7 @@ class ChatModel extends ChangeNotifier {
   void createNewSession() {
     _sessions.add(Session(name: 'Session ${_sessions.length + 1}'));
     _activeSessionIndex = _sessions.length - 1;
+    _inSettings = false;
     _saveData();
     notifyListeners();
   }
@@ -95,6 +96,7 @@ class ChatModel extends ChangeNotifier {
 
   void setActiveSession(int index) {
     _activeSessionIndex = index;
+    _inSettings = false;
     _saveData();
     notifyListeners();
   }
@@ -121,6 +123,20 @@ class ChatModel extends ChangeNotifier {
   void deleteMessageFromActiveSession(int index) {
     activeSession.removeLatestMessageAt(index);
     _saveData();
+    notifyListeners();
+  }
+
+  bool _inSettings = false;
+
+  bool get inSettings => _inSettings;
+
+  void switchToSettings() {
+    _inSettings = true;
+    notifyListeners();
+  }
+
+  void switchToChat() {
+    _inSettings = false;
     notifyListeners();
   }
 }

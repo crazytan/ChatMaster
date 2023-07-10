@@ -6,6 +6,7 @@ import 'chat_model.dart';
 import 'chat_screen.dart';
 import 'env.dart';
 import 'session_list.dart';
+import 'settings_screen.dart';
 
 void main() {
   OpenAI.apiKey = Env.apiKey;
@@ -44,7 +45,10 @@ class MultiSessionChatScreen extends StatelessWidget {
           SessionList(textInputFocusNode: _textInputFocusNode),
           const VerticalDivider(width: 1.0),
           Expanded(
-            child: ChatScreen(textInputFocusNode: _textInputFocusNode),
+            child: Selector<ChatModel, bool>(
+                selector: (_, chatModel) => chatModel.inSettings,
+                builder: (_, inSettings, __) =>
+                    inSettings ? const SettingsScreen() : ChatScreen(textInputFocusNode: _textInputFocusNode)),
           ),
         ],
       ),

@@ -29,7 +29,7 @@ class SessionList extends StatelessWidget {
                     title: Text(
                       chatModel.sessions[index].name,
                     ),
-                    selected: chatModel.activeSessionIndex == index,
+                    selected: !chatModel.inSettings && chatModel.activeSessionIndex == index,
                     onTap: () {
                       chatModel.setActiveSession(index);
                       FocusScope.of(context).requestFocus(_textInputFocusNode);
@@ -43,13 +43,30 @@ class SessionList extends StatelessWidget {
               ),
             ),
           ),
-          FloatingActionButton.extended(
-            onPressed: () {
-              chatModel.createNewSession();
-              FocusScope.of(context).requestFocus(_textInputFocusNode);
-            },
-            label: const Text('New Chat'),
-            icon: const Icon(Icons.add),
+          SizedBox(
+            height: 50.0,
+            width: double.infinity,
+            child: TextButton.icon(
+              onPressed: () {
+                chatModel.createNewSession();
+                FocusScope.of(context).requestFocus(_textInputFocusNode);
+              },
+              label: const Text('New Chat'),
+              icon: const Icon(Icons.add),
+              style: TextButtonTheme.of(context).style,
+            ),
+          ),
+          SizedBox(
+            height: 50.0,
+            width: double.infinity,
+            child: TextButton.icon(
+              onPressed: () {
+                chatModel.switchToSettings();
+              },
+              label: const Text('Settings'),
+              icon: const Icon(Icons.settings),
+              style: TextButtonTheme.of(context).style,
+            ),
           ),
         ],
       ),
