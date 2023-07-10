@@ -20,7 +20,7 @@ class _TextComposerState extends State<TextComposer> {
     return TextField(
       controller: _textController,
       decoration: InputDecoration(
-        hintText: "Send a message",
+        labelText: "Prompt",
         border: const OutlineInputBorder(),
         suffixIcon: IconButton(
           icon: const Icon(Icons.send),

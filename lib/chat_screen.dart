@@ -51,9 +51,9 @@ class ChatScreen extends StatelessWidget {
           ),
         ),
       ),
-      const Divider(height: 1.0),
       Container(
         decoration: BoxDecoration(color: Theme.of(context).cardColor),
+        padding: const EdgeInsets.all(6.0),
         child: TextComposer(
           focusNode: _textInputFocusNode,
         ),
