@@ -38,10 +38,11 @@ class ChatScreen extends StatelessWidget {
                   ),
                 ),
               );
+              double edgeInset = MediaQuery.of(context).size.width * 0.2;
               return Container(
                 padding: isUser
-                    ? const EdgeInsets.only(left: 40.0, right: 2.0, top: 2.0, bottom: 2.0)
-                    : const EdgeInsets.only(left: 2.0, right: 40.0, top: 2.0, bottom: 2.0),
+                    ? EdgeInsets.only(left: edgeInset, right: 2.0, top: 2.0, bottom: 2.0)
+                    : EdgeInsets.only(left: 2.0, right: edgeInset, top: 2.0, bottom: 2.0),
                 child: Row(
                   mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
                   children: isUser ? [deleteButton, message] : [message, deleteButton],
