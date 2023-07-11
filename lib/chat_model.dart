@@ -108,7 +108,7 @@ class ChatModel extends ChangeNotifier {
     session.addUserInput(text);
     _saveData();
 
-    OpenAI.instance.chat.create(model: "gpt-3.5-turbo", messages: session.messages).then((completion) {
+    OpenAI.instance.chat.create(model: modelSelection, messages: session.messages).then((completion) {
       if (!completion.haveChoices) return;
 
       session.messages.add(completion.choices.first.message);
@@ -137,6 +137,15 @@ class ChatModel extends ChangeNotifier {
 
   void switchToChat() {
     _inSettings = false;
+    notifyListeners();
+  }
+
+  String modelSelection = 'gpt-4';
+
+  List<String> models = ['gpt-3.5-turbo', 'gpt-4', 'gpt-4-32k'];
+
+  void setModel(String newModel) {
+    modelSelection = newModel;
     notifyListeners();
   }
 }
