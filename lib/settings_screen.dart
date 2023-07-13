@@ -8,17 +8,16 @@ class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
   @override
-  SettingsScreenState createState() => SettingsScreenState();
+  State createState() => _SettingsScreenState();
 }
 
-class SettingsScreenState extends State<SettingsScreen> {
+class _SettingsScreenState extends State<SettingsScreen> {
   late String modelValue;
 
   @override
   void initState() {
     super.initState();
 
-    // Initialize the local state with the value from the model
     modelValue = Provider.of<ChatModel>(context, listen: false).modelSelection;
   }
 
