@@ -7,7 +7,12 @@ typedef Message = OpenAIChatCompletionChoiceMessageModel;
 
 class Session {
   final String name;
-  List<Message> messages = [];
+  List<Message> messages = [
+    const Message(
+      role: OpenAIChatMessageRole.system,
+      content: 'You are a helpful assistant. You can help me by answering my questions. You can also ask me questions.',
+    )
+  ];
 
   Session({required this.name});
 

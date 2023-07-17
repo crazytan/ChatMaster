@@ -25,12 +25,22 @@ class ChatScreen extends StatelessWidget {
           ),
         ),
       ),
+      Container(
+        padding: const EdgeInsets.all(10.0),
+        child: Selector<ChatModel, String>(
+          selector: (_, chatModel) => chatModel.activeSession.messages[0].content,
+          builder: (context, systemMessage, _) => Text(
+            systemMessage,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+        ),
+      ),
       Expanded(
         child: Consumer<ChatModel>(
           builder: (context, chatModel, _) => ListView.builder(
             padding: const EdgeInsets.all(1.0),
             reverse: true,
-            itemCount: chatModel.activeSession.messages.length,
+            itemCount: chatModel.activeSession.messages.length - 1,
             itemBuilder: (_, index) {
               bool isUser = chatModel.activeSession.isLatestMessageAtUserRole(index);
               Widget deleteButton = IconButton(
