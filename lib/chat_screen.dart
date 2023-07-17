@@ -15,6 +15,16 @@ class ChatScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
+      Container(
+        padding: const EdgeInsets.all(15.0),
+        child: Selector<ChatModel, String>(
+          selector: (_, chatModel) => chatModel.activeSession.name,
+          builder: (context, settingName, _) => Text(
+            settingName,
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
+        ),
+      ),
       Expanded(
         child: Consumer<ChatModel>(
           builder: (context, chatModel, _) => ListView.builder(
