@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: ChangeNotifierProvider(
-        create: (context) => ChatModel(),
+        create: (_) => ChatModel(),
         child: MultiSessionChatScreen(),
       ),
     );

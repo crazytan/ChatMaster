@@ -65,13 +65,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     modelValue = newValue!;
                   });
                 },
-                items:
-                    Provider.of<ChatModel>(context, listen: false).models.map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
+                items: ChatModel.models
+                    .map<DropdownMenuItem<String>>((String value) => DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        ))
+                    .toList(),
               ),
               const SizedBox(height: 20),
               ElevatedButton(

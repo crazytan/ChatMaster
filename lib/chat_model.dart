@@ -16,7 +16,7 @@ class Session {
 
   Session({required this.name});
 
-  Session.fromJson(Map<String, dynamic> json)
+  Session.fromMap(Map<String, dynamic> json)
       : name = json['name'],
         messages = hasMessages(json) ? json['messages'].map<Message>((m) => Message.fromMap(m)).toList() : [];
 
@@ -31,7 +31,7 @@ class Session {
     return messages.isNotEmpty;
   }
 
-  Map<String, dynamic> toJson() => {'name': name, 'messages': messages.map((m) => m.toMap()).toList()};
+  Map<String, dynamic> toMap() => {'name': name, 'messages': messages.map((m) => m.toMap()).toList()};
 
   Message latestMessageAt(int index) => messages[messages.length - index - 1];
 
@@ -62,24 +62,20 @@ class ChatModel extends ChangeNotifier {
 
   void _loadData() {
     JsonFileIO.readJsonFile().then((data) {
-      if (data.isNotEmpty) {
-        _sessions = data['sessions'].map<Session>((s) => Session.fromJson(s)).toList();
-        _activeSessionIndex = data['activeSessionIndex'];
-      } else {
-        _sessions = [
-          Session(name: 'Session 1'),
-          Session(name: 'Session 2'),
-        ];
-        _saveData();
+      if (data.containsKey('sessions')) {
+        _sessions = data['sessions'].map<Session>((s) => Session.fromMap(s)).toList();
       }
+      if (data.containsKey('activeSessionIndex')) _activeSessionIndex = data['activeSessionIndex'];
+      if (data.containsKey('modelSelection')) _modelSelection = data['modelSelection'];
       notifyListeners();
     });
   }
 
   void _saveData() {
     final data = {
-      'sessions': _sessions.map((session) => session.toJson()).toList(),
+      'sessions': _sessions.map((session) => session.toMap()).toList(),
       'activeSessionIndex': _activeSessionIndex,
+      'modelSelection': modelSelection,
     };
     JsonFileIO.writeJsonFile(data);
   }
@@ -145,12 +141,15 @@ class ChatModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  String modelSelection = 'gpt-4';
+  String _modelSelection = models[0];
 
-  List<String> models = ['gpt-3.5-turbo', 'gpt-4', 'gpt-4-32k'];
+  String get modelSelection => _modelSelection;
+
+  static final List<String> models = ['gpt-3.5-turbo', 'gpt-4', 'gpt-4-32k'];
 
   void setModel(String newModel) {
-    modelSelection = newModel;
+    if (!models.contains(newModel)) return;
+    _modelSelection = newModel;
     notifyListeners();
   }
 }
